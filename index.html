@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clickable URLs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 60%;
+            padding: 10px;
+            font-size: 16px;
+            border: 3px solid #ccc;
+            border-radius: 15px;
+            resize: vertical;
+            margin-bottom: 20px;
+        }
+
+        button {
+            background-color: goldenrod;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: lightgreen;
+        }
+
+        button.clicked {
+            background-color: #000;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .link-container {
+            margin-top: 20px;
+        }
+
+        .link-group {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <center>
+    <h1>URL OPENER</h1>
+    <p>Professor Software Solutions</p>
+    <textarea id="urlTextarea" rows="10" placeholder="Paste URLs here..."></textarea><br>
+    <button onclick="convertUrls()">Convert into URLs</button>
+    </center>
+    <div id="outputDiv"></div>
+
+    <script>
+        function convertUrls() {
+            var textareaValue = document.getElementById('urlTextarea').value;
+            var urls = textareaValue.split('\n');
+            var outputDiv = document.getElementById('outputDiv');
+            outputDiv.innerHTML = '';
+
+            var linksContainer = document.createElement('div');
+            linksContainer.classList.add('link-container');
+            var count = 0;
+            var linkGroup = [];
+            var totalLinks = 0;
+
+            urls.forEach(function(url) {
+                if (url.trim() !== '') {
+                    var link = document.createElement('a');
+                    link.href = url.trim();
+                    link.textContent = url.trim();
+                    link.target = '_blank'; // Open link in a new tab
+
+                    linkGroup.push(link);
+                    count++;
+                    totalLinks++;
+
+                    if (count === 10 || totalLinks === urls.length) {
+                        var openAllButton = document.createElement('button');
+                        openAllButton.textContent = 'Open Links ' + (totalLinks - count + 1) + ' to ' + totalLinks;
+                        openAllButton.onclick = function(links) {
+                            return function() {
+                                links.forEach(function(link) {
+                                    window.open(link.href, '_blank');
+                                });
+                            };
+                        }(linkGroup);
+
+                        openAllButton.addEventListener('click', function() {
+                            openAllButton.classList.add('clicked');
+                        });
+
+                        var linkGroupContainer = document.createElement('div');
+                        linkGroupContainer.classList.add('link-group');
+                        linkGroup.forEach(function(link) {
+                            link.addEventListener('click', function() {
+                                link.style.color = 'black';
+                            });
+                            linkGroupContainer.appendChild(link);
+                            linkGroupContainer.appendChild(document.createElement('br'));
+                        });
+
+                        linksContainer.appendChild(linkGroupContainer);
+                        linksContainer.appendChild(openAllButton);
+                        linksContainer.appendChild(document.createElement('br'));
+
+                        linkGroup = [];
+                        count = 0;
+                    }
+                }
+            });
+
+            outputDiv.appendChild(linksContainer);
+        }
+    </script>
+</body>
+</html>
