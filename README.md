@@ -12,7 +12,7 @@
 
 ## Demo
 
-![LinkOpenerPro Demo](https://upload.wikimedia.org/wikipedia/commons/3/34/Icon_hacker.png)  
+![LinkOpenerPro Demo](https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/32/01/a8/3201a809-2caa-f3ab-ece9-c805425880e8/AppIcon-0-0-85-220-0-4-0-2x.png/1200x630bb.png)  
 [Click here to try LinkOpenerPro](#)
 
 ## How to Use
