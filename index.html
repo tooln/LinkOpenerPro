@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/3/34/Icon_hacker.png">
+    <title>LinkOpenerPro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f7f7;
+            color: #444;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 10px; /* Decreased padding */
+            flex-direction: column; /* Align elements in a column */
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px; /* Decreased padding */
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.3rem; /* Slightly reduced size */
+            color: #2c3e50;
+            margin-bottom: 10px; /* Decreased margin */
+        }
+
+        p {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 20px; /* Decreased margin */
+        }
+
+        textarea {
+            width: 100%;
+            max-width: 800px;
+            height: 120px; /* Decreased height */
+            padding: 12px; /* Decreased padding */
+            font-size: 1rem;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background-color: #fafafa;
+            resize: vertical;
+            margin-bottom: 15px; /* Decreased margin */
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            outline: none;
+        }
+
+        textarea:focus {
+            border-color: #3498db;
+        }
+
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 25px; /* Adjusted padding */
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        button.clicked {
+            background-color: red; /* Red background for clicked buttons */
+        }
+
+        a {
+            color: #3498db;
+            text-decoration: none;
+            display: inline-block;
+            margin: 8px 0;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+
+        a:hover {
+            color: #e74c3c;
+            text-decoration: underline;
+        }
+
+        a.clicked {
+            color: red; /* Red color for clicked links */
+        }
+
+        .link-container {
+            margin-top: 20px; /* Decreased margin */
+        }
+
+        .link-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .output-text {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Style for the powered by text */
+        .powered-by {
+            margin-top: 30px;
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Link Opener Pro</h1>
+        <p>Efficiently open multiple URLs with a single click.</p>
+
+        <textarea id="urlTextarea" placeholder="Paste URLs here, each on a new line..."></textarea><br>
+        <button onclick="convertUrls()">Convert into URLs</button>
+
+        <div id="outputDiv" class="link-container"></div>
+    </div>
+
+    <div class="powered-by">
+        <p>Powered by Professor Software Solutions</p>
+    </div>
+
+    <script>
+        function convertUrls() {
+            var textareaValue = document.getElementById('urlTextarea').value;
+            
+            // Remove empty newlines and trim extra spaces
+            var urls = textareaValue.split('\n').map(function(url) {
+                return url.trim(); // Remove leading/trailing spaces
+            }).filter(function(url) {
+                return url !== ''; // Remove empty entries
+            });
+
+            var outputDiv = document.getElementById('outputDiv');
+            outputDiv.innerHTML = ''; // Clear previous results
+
+            var linksContainer = document.createElement('div');
+            linksContainer.classList.add('link-container');
+            var count = 0;
+            var linkGroup = [];
+            var totalLinks = 0;
+
+            urls.forEach(function(url) {
+                var link = document.createElement('a');
+                link.href = url;
+                link.textContent = url;
+                link.target = '_blank'; // Open link in a new tab
+
+                // Add event listener to change link color to red on click
+                link.addEventListener('click', function() {
+                    link.classList.add('clicked');
+                });
+
+                linkGroup.push(link);
+                count++;
+                totalLinks++;
+
+                if (count === 10 || totalLinks === urls.length) {
+                    var openAllButton = document.createElement('button');
+                    openAllButton.textContent = 'Open Links ' + (totalLinks - count + 1) + ' to ' + totalLinks;
+                    openAllButton.onclick = function(links) {
+                        return function() {
+                            links.forEach(function(link) {
+                                window.open(link.href, '_blank');
+                            });
+                        };
+                    }(linkGroup);
+
+                    // Add event listener to change button background color to red on click
+                    openAllButton.addEventListener('click', function() {
+                        openAllButton.classList.add('clicked');
+                    });
+
+                    var linkGroupContainer = document.createElement('div');
+                    linkGroupContainer.classList.add('link-group');
+                    linkGroup.forEach(function(link) {
+                        linkGroupContainer.appendChild(link);
+                        linkGroupContainer.appendChild(document.createElement('br'));
+                    });
+
+                    linksContainer.appendChild(linkGroupContainer);
+                    linksContainer.appendChild(openAllButton);
+                    linksContainer.appendChild(document.createElement('br'));
+
+                    linkGroup = [];
+                    count = 0;
+                }
+            });
+
+            // Display result
+            if (totalLinks === 0) {
+                outputDiv.innerHTML = '<p class="output-text">No valid URLs found. Please try again with correct URLs.</p>';
+            } else {
+                outputDiv.appendChild(linksContainer);
+            }
+        }
+    </script>
+
+</body>
+</html>
